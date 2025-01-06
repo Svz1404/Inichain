@@ -6,7 +6,6 @@ and then
 - **cd Inichain**
 make a file .env
 - **nano .env**
-- 
 fill the format
 
 **PRIVATE_KEY=YOURPRIVATEKEY 
