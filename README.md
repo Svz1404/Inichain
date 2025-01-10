@@ -38,7 +38,7 @@ and then install all module
 **npm install cfonts**
 
 
-Before you running the script, make sure you a WINI token on your wallet(Check the video)
+**Before you running the script, make sure you have a WINI token on your wallet(Check the video)**
 run your script
 
 **node index.js**
