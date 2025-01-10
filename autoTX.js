@@ -4,7 +4,7 @@ import readline from "readline";
 
 // Configuration
 const RPC_URL = "https://rpc-testnet.inichain.com";
-const PRIVATE_KEY = "PRIVATEKEY"; // Replace with your private key
+const PRIVATE_KEY = "PRIVATE KEY"; // Replace with your private key
 const LOOP_INTERVAL = 1 * 60 * 1000; // 1 minute in milliseconds
 
 // Initialize provider and wallet
@@ -49,7 +49,7 @@ async function sendEther(toAddress, amount) {
 
     // Wait for confirmation
     styledLog("\nWaiting for confirmation...\n");
-    const receipt = await tx; // Wait for at least 1 block confirmation
+    const receipt = await tx.wait(1); // Wait for at least 1 block confirmation
 
     if (receipt) {
       styledLog("\u2705 Transaction Confirmed!", "\x1b[32m");
@@ -79,18 +79,12 @@ async function main() {
   const choice = await promptQuestion(
     "Choose an option:\n1. Send to a random address\n2. Send to a specific address\nEnter your choice (1 or 2): "
   );
-  const amount = await promptQuestion("Enter the amount of ether to send: ");
 
-  const loopCount = parseInt(
-    await promptQuestion("Enter how many times to repeat (loop count): "),
-    10
-  );
-  for (let i = 0; i < loopCount; i++) {
-    styledLog(`\n[Loop ${i + 1}/${loopCount}]`, "\x1b[35m");
   let recipient;
-  if (choice === "1") {
+  const isRandomAddress = choice === "1";
+
+  if (isRandomAddress) {
     styledLog("Selected: Random Address", "\x1b[33m");
-    recipient = getRandomAddress();
   } else if (choice === "2") {
     recipient = await promptQuestion("Enter the recipient address: ");
     styledLog(`Selected: Specific Address -> ${recipient}`, "\x1b[33m");
@@ -99,10 +93,23 @@ async function main() {
     return;
   }
 
-  
+  const amount = await promptQuestion("Enter the amount of ether to send: ");
+  const loopCount = parseInt(
+    await promptQuestion("Enter how many times to repeat (loop count): "),
+    10
+  );
 
- 
+  for (let i = 0; i < loopCount; i++) {
+    styledLog(`\n[Loop ${i + 1}/${loopCount}]`, "\x1b[35m");
+
+    // Generate a new random address for each transaction if random address option is selected
+    if (isRandomAddress) {
+      recipient = getRandomAddress();
+      styledLog(`Generated random address: ${recipient}`, "\x1b[34m");
+    }
+
     await sendEther(recipient, amount);
+
     if (i < loopCount - 1) {
       styledLog(`Waiting for 1 minute before the next transaction...`, "\x1b[33m");
       await new Promise((resolve) => setTimeout(resolve, LOOP_INTERVAL));
