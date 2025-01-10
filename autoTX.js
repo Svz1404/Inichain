@@ -5,7 +5,7 @@ import readline from "readline";
 // Configuration
 const RPC_URL = "https://rpc-testnet.inichain.com";
 const PRIVATE_KEY = "PRIVATEKEY"; // Replace with your private key
-const LOOP_INTERVAL = 1 * 60 * 1000; // 1 minute in milliseconds 
+const LOOP_INTERVAL = 1 * 60 * 1000; // 1 minute in milliseconds
 
 // Initialize provider and wallet
 const provider = new ethers.JsonRpcProvider(RPC_URL);
@@ -79,7 +79,14 @@ async function main() {
   const choice = await promptQuestion(
     "Choose an option:\n1. Send to a random address\n2. Send to a specific address\nEnter your choice (1 or 2): "
   );
+  const amount = await promptQuestion("Enter the amount of ether to send: ");
 
+  const loopCount = parseInt(
+    await promptQuestion("Enter how many times to repeat (loop count): "),
+    10
+  );
+  for (let i = 0; i < loopCount; i++) {
+    styledLog(`\n[Loop ${i + 1}/${loopCount}]`, "\x1b[35m");
   let recipient;
   if (choice === "1") {
     styledLog("Selected: Random Address", "\x1b[33m");
@@ -92,15 +99,9 @@ async function main() {
     return;
   }
 
-  const amount = await promptQuestion("Enter the amount of ether to send: ");
+  
 
-  const loopCount = parseInt(
-    await promptQuestion("Enter how many times to repeat (loop count): "),
-    10
-  );
-
-  for (let i = 0; i < loopCount; i++) {
-    styledLog(`\n[Loop ${i + 1}/${loopCount}]`, "\x1b[35m");
+ 
     await sendEther(recipient, amount);
     if (i < loopCount - 1) {
       styledLog(`Waiting for 1 minute before the next transaction...`, "\x1b[33m");
