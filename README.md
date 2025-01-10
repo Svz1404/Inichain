@@ -1,3 +1,8 @@
+![image](https://github.com/user-attachments/assets/0d9677db-1f18-430a-b66c-a4c4b986a56a)
+**Auto Transaction INI
+Just Fill Your private key on autoTx.js
+and run it**
+
 Auto SWAP Candy Inichain
 
 First Download the file
