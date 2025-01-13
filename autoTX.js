@@ -49,7 +49,7 @@ async function sendEther(toAddress, amount) {
 
     // Wait for confirmation
     styledLog("\nWaiting for confirmation...\n");
-    const receipt = await tx.wait(1); // Wait for at least 1 block confirmation
+    const receipt = await tx // Wait for at least 1 block confirmation
 
     if (receipt) {
       styledLog("\u2705 Transaction Confirmed!", "\x1b[32m");
