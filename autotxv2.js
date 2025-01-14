@@ -106,7 +106,7 @@ async function main() {
     return;
   }
 
-  const amount = await promptQuestion("Enter the amount of ether to send: ");
+  const amount = await promptQuestion("Enter the amount of INI to send: ");
   const loopCount = parseInt(
     await promptQuestion("Enter how many times to repeat (loop count): "),
     10
