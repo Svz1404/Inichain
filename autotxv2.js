@@ -1,11 +1,21 @@
 import { ethers } from "ethers";
 import cfonts from "cfonts";
 import readline from "readline";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Configuration
 const RPC_URL = "https://rpc-testnet.inichain.com";
-const PRIVATE_KEY = "PRIVATE KEY"; // Replace with your private key
+const PRIVATE_KEY = process.env.PRIVATE_KEY; // Load private key from .env
 const LOOP_INTERVAL = 1 * 60 * 1000; // 1 minute in milliseconds
+
+// Validate private key
+if (!PRIVATE_KEY) {
+  console.error("\x1b[31mError: PRIVATE_KEY is not set in the .env file.\x1b[0m");
+  process.exit(1);
+}
 
 // Initialize provider and wallet
 const provider = new ethers.JsonRpcProvider(RPC_URL);
