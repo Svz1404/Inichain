@@ -44,8 +44,8 @@ function promptQuestion(query) {
   }));
 }
 
-// Send ether
-async function sendEther(toAddress, amount, gasPrice) {
+// Send ether with nonce increment
+async function sendEther(toAddress, amount, gasPrice, nonce) {
   try {
     styledLog(`Sending ether to: ${toAddress}`, "\x1b[32m");
 
@@ -55,6 +55,7 @@ async function sendEther(toAddress, amount, gasPrice) {
       to: toAddress,
       value: ethers.parseEther(amount),
       gasPrice: ethers.parseUnits(gasPrice, "gwei"),
+      nonce, // Use the specified nonce
     });
     styledLog(`Transaction sent! Hash: ${tx.hash}`, "\x1b[36m");
 
@@ -116,6 +117,9 @@ async function main() {
     10
   );
 
+  // Fetch the starting nonce
+  let currentNonce = await provider.getTransactionCount(wallet.address);
+
   for (let i = 0; i < loopCount; i++) {
     styledLog(`\n[Loop ${i + 1}/${loopCount}]`, "\x1b[35m");
 
@@ -125,7 +129,8 @@ async function main() {
     }
 
     for (const recipient of recipients) {
-      await sendEther(recipient, amount, gasPrice);
+      await sendEther(recipient, amount, gasPrice, currentNonce);
+      currentNonce++; // Increment nonce after each transaction
     }
 
     if (i < loopCount - 1) {
