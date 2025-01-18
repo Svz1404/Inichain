@@ -45,7 +45,7 @@ function promptQuestion(query) {
 }
 
 // Send ether
-async function sendEther(toAddress, amount) {
+async function sendEther(toAddress, amount, gasPrice) {
   try {
     styledLog(`Sending ether to: ${toAddress}`, "\x1b[32m");
 
@@ -54,12 +54,13 @@ async function sendEther(toAddress, amount) {
     const tx = await wallet.sendTransaction({
       to: toAddress,
       value: ethers.parseEther(amount),
+      gasPrice: ethers.parseUnits(gasPrice, "gwei"),
     });
     styledLog(`Transaction sent! Hash: ${tx.hash}`, "\x1b[36m");
 
     // Wait for confirmation
     styledLog("\nWaiting for confirmation...\n");
-    const receipt = await tx // Wait for at least 1 block confirmation
+    const receipt = await tx; // Wait for at least 1 block confirmation
 
     if (receipt) {
       styledLog("\u2705 Transaction Confirmed!", "\x1b[32m");
@@ -107,6 +108,9 @@ async function main() {
   }
 
   const amount = await promptQuestion("Enter the amount of INI to send: ");
+  const gasPrice = await promptQuestion(
+    "Enter the gas price in Gwei (e.g., 20): "
+  );
   const loopCount = parseInt(
     await promptQuestion("Enter how many times to repeat (loop count): "),
     10
@@ -121,7 +125,7 @@ async function main() {
     }
 
     for (const recipient of recipients) {
-      await sendEther(recipient, amount);
+      await sendEther(recipient, amount, gasPrice);
     }
 
     if (i < loopCount - 1) {
